@@ -1,0 +1,17 @@
+{
+  "name": "minhyeoky-cc-plugins",
+  "owner": {
+    "name": "Minhyeok Lee"
+  },
+  "metadata": {
+    "description": "Claude Code plugins by Minhyeok Lee",
+    "pluginRoot": "./plugins"
+  },
+  "plugins": [
+    {
+      "name": "cc-event-exporter",
+      "source": "./plugins/cc-event-exporter",
+      "description": "Export all Claude Code hook events to JSONL for real-time monitoring"
+    }
+  ]
+}
