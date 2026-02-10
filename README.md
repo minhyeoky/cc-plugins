@@ -10,6 +10,7 @@ Claude Code plugin marketplace by Minhyeok Lee.
 
 # Install a plugin
 /plugin install cc-event-exporter@minhyeoky-cc-plugins
+/plugin install cc-tmux-status@minhyeoky-cc-plugins
 ```
 
 ## Plugins
@@ -39,3 +40,24 @@ export CC_EVENT_OUTBOX=/path/to/events.jsonl
   "data": { ... }
 }
 ```
+
+### cc-tmux-status
+
+Show Claude Code session status as emoji prefix on your tmux window name.
+
+While Claude Code is running, the tmux window name updates in real-time to reflect the current state:
+
+| State | Emoji | Meaning |
+|-------|-------|---------|
+| 🧠 | Thinking | Session active / processing prompt |
+| 🚧 | Tool use | Executing a tool |
+| ❌ | Failure | Tool execution failed |
+| 🔓 | Permission | Waiting for permission |
+| 🔔 | Notification | Permission/idle notification |
+| ✅ | Done | Task completed |
+
+The original window name is restored when the session ends.
+
+**Customization:**
+
+Edit `hooks/tmux-status-config.sh` in the plugin directory to change the emoji mappings.

@@ -12,6 +12,11 @@
       "name": "cc-event-exporter",
       "source": "./plugins/cc-event-exporter",
       "description": "Export all Claude Code hook events to JSONL for real-time monitoring"
+    },
+    {
+      "name": "cc-tmux-status",
+      "source": "./plugins/cc-tmux-status",
+      "description": "Show Claude Code session status as emoji prefix on tmux window name"
     }
   ]
 }
