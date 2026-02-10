@@ -13,4 +13,4 @@ EMOJI_STOP="✅"
 # --- Task summary config ---
 # Override with env: CC_TMUX_SUMMARY=0 to disable
 ENABLE_SUMMARY="${CC_TMUX_SUMMARY:-1}"
-SUMMARY_MAX_LENGTH=30
+SUMMARY_MAX_LENGTH=10
