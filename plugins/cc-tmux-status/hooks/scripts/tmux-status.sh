@@ -32,10 +32,16 @@ strip_emojis() {
 
 update_prefix() {
   local emoji="$1"
-  local raw_name
-  raw_name=$(tmux display-message -t "$TMUX_PANE" -p '#{window_name}')
+  local summary
+  summary=$(tmux show-options -wqv -t "$TMUX_PANE" "@cc_summary" 2>/dev/null || true)
   local name
-  name=$(strip_emojis "$raw_name")
+  if [[ -n "$summary" ]]; then
+    name="$summary"
+  else
+    local raw_name
+    raw_name=$(tmux display-message -t "$TMUX_PANE" -p '#{window_name}')
+    name=$(strip_emojis "$raw_name")
+  fi
   tmux rename-window -t "$TMUX_PANE" "${emoji} ${name}"
 }
 
@@ -45,6 +51,7 @@ remove_prefix() {
   local name
   name=$(strip_emojis "$raw_name")
   tmux rename-window -t "$TMUX_PANE" "$name"
+  tmux set-option -wqu -t "$TMUX_PANE" "@cc_summary" 2>/dev/null || true
 }
 
 case "$EVENT" in
@@ -56,7 +63,17 @@ case "$EVENT" in
     remove_prefix
     tmux set-option -w -t "$TMUX_PANE" automatic-rename on
     ;;
-  UserPromptSubmit)   update_prefix "$EMOJI_USER_PROMPT_SUBMIT" ;;
+  UserPromptSubmit)
+    if [[ "$ENABLE_SUMMARY" == "1" ]] && command -v jq &>/dev/null; then
+      _prompt=$(jq -r '.prompt // empty' 2>/dev/null || true)
+      if [[ -n "$_prompt" ]]; then
+        _prompt="${_prompt//$'\n'/ }"
+        _prompt="${_prompt:0:$SUMMARY_MAX_LENGTH}"
+        tmux set-option -wq -t "$TMUX_PANE" "@cc_summary" "$_prompt"
+      fi
+    fi
+    update_prefix "$EMOJI_USER_PROMPT_SUBMIT"
+    ;;
   PreToolUse)         update_prefix "$EMOJI_PRE_TOOL_USE" ;;
   PostToolUse)        update_prefix "$EMOJI_POST_TOOL_USE" ;;
   PostToolUseFailure) update_prefix "$EMOJI_POST_TOOL_USE_FAILURE" ;;
