@@ -1,8 +1,11 @@
 {
   "name": "cc-tmux-status",
-  "description": "Show Claude Code session status as emoji prefix on tmux window name.",
+  "description": "Show Claude Code session status as emoji prefix on tmux window name",
   "version": "1.0.0",
   "author": {
     "name": "Minhyeok Lee"
-  }
+  },
+  "repository": "https://github.com/minhyeoky/cc-plugins",
+  "license": "MIT",
+  "keywords": ["tmux", "status", "emoji", "window-name"]
 }

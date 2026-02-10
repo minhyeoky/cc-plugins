@@ -6,8 +6,7 @@ set -euo pipefail
 EVENT="${1:?usage: tmux-status.sh <event_name>}"
 
 # Load emoji config
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-source "${SCRIPT_DIR}/tmux-status-config.sh"
+source "${CLAUDE_PLUGIN_ROOT}/hooks/tmux-status-config.sh"
 
 # Helper: swap emoji prefix, keeping original name
 update_prefix() {

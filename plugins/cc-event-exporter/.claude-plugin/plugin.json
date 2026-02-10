@@ -1,8 +1,11 @@
 {
   "name": "cc-event-exporter",
-  "description": "A plugin to export events from the Claude Code.",
+  "description": "Export all Claude Code hook events to JSONL for real-time monitoring",
   "version": "1.0.0",
   "author": {
     "name": "Minhyeok Lee"
-  }
+  },
+  "repository": "https://github.com/minhyeoky/cc-plugins",
+  "license": "MIT",
+  "keywords": ["events", "logging", "monitoring", "jsonl"]
 }
