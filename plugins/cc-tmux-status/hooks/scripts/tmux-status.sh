@@ -6,7 +6,7 @@ set -euo pipefail
 EVENT="${1:?usage: tmux-status.sh <event_name>}"
 
 # Load emoji config
-source "${CLAUDE_PLUGIN_ROOT}/hooks/tmux-status-config.sh"
+source "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/tmux-status-config.sh"
 
 # Store original window name in @cc_base_name so emoji never duplicates
 update_prefix() {
