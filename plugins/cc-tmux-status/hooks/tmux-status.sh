@@ -8,20 +8,24 @@ EVENT="${1:?usage: tmux-status.sh <event_name>}"
 # Load emoji config
 source "${CLAUDE_PLUGIN_ROOT}/hooks/tmux-status-config.sh"
 
-# Helper: swap emoji prefix, keeping original name
+# Helper: swap emoji prefix on current window name
 update_prefix() {
   local emoji="$1"
-  local orig
-  orig=$(tmux show-option -w -t "$TMUX_PANE" -v @cc_orig_name 2>/dev/null || true)
-  [[ -n "$orig" ]] && tmux rename-window -t "$TMUX_PANE" "${emoji} ${orig}"
+  local name
+  name=$(tmux display-message -t "$TMUX_PANE" -p '#{window_name}')
+  local old_emoji
+  old_emoji=$(tmux show-option -w -t "$TMUX_PANE" -v @cc_emoji 2>/dev/null || true)
+  if [[ -n "$old_emoji" && "$name" == "${old_emoji} "* ]]; then
+    name="${name#"${old_emoji} "}"
+  fi
+  tmux set-option -w -t "$TMUX_PANE" @cc_emoji "$emoji"
+  tmux rename-window -t "$TMUX_PANE" "${emoji} ${name}"
 }
 
 case "$EVENT" in
   SessionStart)
-    ORIG=$(tmux display-message -t "$TMUX_PANE" -p '#{window_name}')
-    tmux set-option -w -t "$TMUX_PANE" @cc_orig_name "$ORIG"
     tmux set-option -w -t "$TMUX_PANE" automatic-rename off
-    tmux rename-window -t "$TMUX_PANE" "${EMOJI_SESSION_START} ${ORIG}"
+    update_prefix "$EMOJI_SESSION_START"
     ;;
   UserPromptSubmit)
     update_prefix "$EMOJI_USER_PROMPT_SUBMIT"
@@ -45,11 +49,13 @@ case "$EVENT" in
     update_prefix "$EMOJI_STOP"
     ;;
   SessionEnd)
-    ORIG=$(tmux show-option -w -t "$TMUX_PANE" -v @cc_orig_name 2>/dev/null || true)
-    if [[ -n "$ORIG" ]]; then
-      tmux rename-window -t "$TMUX_PANE" "$ORIG"
+    name=$(tmux display-message -t "$TMUX_PANE" -p '#{window_name}')
+    old_emoji=$(tmux show-option -w -t "$TMUX_PANE" -v @cc_emoji 2>/dev/null || true)
+    if [[ -n "$old_emoji" && "$name" == "${old_emoji} "* ]]; then
+      name="${name#"${old_emoji} "}"
     fi
-    tmux set-option -w -t "$TMUX_PANE" -u @cc_orig_name 2>/dev/null || true
+    tmux rename-window -t "$TMUX_PANE" "$name"
+    tmux set-option -w -t "$TMUX_PANE" -u @cc_emoji 2>/dev/null || true
     tmux set-option -w -t "$TMUX_PANE" automatic-rename on
     ;;
 esac
